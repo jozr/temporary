@@ -59,7 +59,7 @@ From there, I'll approach the next coordinate either horizontally or vertically 
 
 ![Levenshtein Grid, Step 3](/images/levenshtein-grid-3.png "Levenshtein Grid, Step 3")
 
-If I continue to do this for all the boxes, I end up with the following grid. The top left box `(4, 4)` becomes the final edit distance between the strings. Therefore, the edit distance between 'here' and 'hear' is 2.
+If I continue to do this for all the boxes, I end up with the following grid. The top right box `(4, 4)` becomes the final edit distance between the strings. Therefore, the edit distance between 'here' and 'hear' is 2.
 
 ![Levenshtein Grid, Step 4](/images/levenshtein-grid-4.png "Levenshtein Grid, Step 4")
 
@@ -238,7 +238,7 @@ end
 
 Like most algorithms, Levenshtein Distance has some shortcomings. 
 
-For example, the word 'receive' in English is easy to misspell. Often the 'i' and 'e' are switched in typing mistakes or otherwise. Using the Levenshtein Distance algorithm, the strings 'recieve' and 'receipt' are both 2 substitutional edit operations away from 'receive'. This is particularly problematic because it's much more likely for someone to spell 'receive' as 'receive' while the word 'receipt' is semantically very different.
+For example, the word 'receive' in English is easy to misspell. Often the 'i' and 'e' are switched in typing mistakes or otherwise. Using the Levenshtein Distance algorithm, the strings 'recieve' and 'receipt' are both 2 substitutional edit operations away from 'receive'. This is particularly problematic because it's much more likely for someone to spell 'receive' as 'recieve' while the word 'receipt' is semantically very different.
 
 Another scientist named Frederick Damerau proposed an improvement to the Levenshtein Distance algorithm to account for character switches like the 'i' and 'e' in the case of 'receive' vs. 'recieve'.
 
