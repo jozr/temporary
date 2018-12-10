@@ -1,5 +1,7 @@
 # SALTY-76: Investigate Offline Mode
 
+As part of our requirements, we should be building our features with an offline-first approach.
+
 ## Current Native Implementation
 
 ### Data
@@ -85,12 +87,7 @@ The upcoming lesson is downloaded automatically when a user starts the current l
 
 ## Offline Libraries for React Native
 
-<!-- ### redux-persist
-
-https://github.com/rt2zz/redux-persist
-
-- Requires use of [redux](https://redux.js.org/)
--->
+Here are a few libraries I discovered. Much of the following information is taken from the documentation.
 
 ### AsyncStorage
 
@@ -98,11 +95,15 @@ https://facebook.github.io/react-native/docs/asyncstorage
 
 "AsyncStorage is a simple, unencrypted, asynchronous, persistent, key-value storage system that is global to the app. It should be used instead of LocalStorage."
 
+On iOS, AsyncStorage is backed by native code that stores small values in a serialized dictionary and larger values in separate files. On Android, AsyncStorage will use either RocksDB or SQLite based on what is available.
+
+With AsyncStorage, it would be necessary to use NetInfo to collect online status.
+
 #### NetInfo
 
 https://facebook.github.io/react-native/docs/netinfo
 
-NetInfo is a built-in module that exposes information about the offline and online status. Much of the following information is taken from the documentation.
+NetInfo is a built-in module that exposes information about the offline and online status.
 
 Cross platform values for `ConnectionType`:
 - `none` - device is offline
@@ -121,6 +122,25 @@ https://github.com/rgommezz/react-native-offline
 
 "Handy toolbelt to deal nicely with offline/online connectivity in a React Native app. Smooth redux integration ✈️"
 
+- Offline/online conditional rendering through HOC or Render Callback techniques
+- Reducer to keep your connectivity state in the Redux store
+- Redux middleware to intercept internet request actions in offline mode and apply DRY principle
+- Compatibility with async middleware libraries like redux-thunk, redux-saga and redux-observable
+- A saga to place the network event subscriptions outside of your components
+- A step further than NetInfo detecting internet access besides network connectivity
+- Offline queue support to automatically re-dispatch actions when connection is back online or dismiss actions based on other actions dispatched (i.e navigation related)
+- Ability to check connectivity regularly
 - Helps alleviate issues with NetInfo
   - "[NetInfo] allows you to detect network connectivity, but it does not guarantee you can exchange data with a remote server even though it reports you are connected."
+  - "[react-native-offline] takes a step further and covers the ground by pinging a remote server using a http HEAD request, in order to make sure the new connection state is not a false positive. By default, it’s configured to ping https://google.com with a timeout of 3 seconds, but you can customise both remote server and timeout as you wish. Those parameters can be passed to component utilities and your redux store"
 
+### redux-offline
+
+https://github.com/redux-offline/redux-offline
+
+"Persistent Redux store for Reasonaboutable™️ Offline-First applications, with first-class support for optimistic UI. Use with React, React Native, or as standalone state container for any web app."
+
+- Must be used alongside Redux
+- Uses NetInfo
+  - "Out of the box React Offline uses the NetInfo API to determine if there’s an internet connection but I found this unreliable so added my own middleware. The unreliability is owing to a shortcoming in the NetInfo API that works off the assumption that if the WiFi or cellular network has an allocated public IP, it’s connected. This assumption falls down when you’re connected to a captive WiFi connection (coffee shop) that’s behind a paywall. The phone reports a WiFi connection but there’s no outbound connection to the internet. Another issue that’s caught us off was when a user has a cellular connection but they’ve exhausted their data plan." - [kulor](https://medium.com/@kulor/creating-an-offline-first-react-native-app-5534d7794969)
+- Redux Offline helps you with offline state management, but it does not automatically make your web site available offline. For caching assets (HTML pages, scripts, images, and other resources) your website needs to implement a ServiceWorker.
