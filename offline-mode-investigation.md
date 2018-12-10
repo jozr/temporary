@@ -7,6 +7,7 @@
 Overview of data stored:
 - Basic user information
   - UUID (?)
+  - (?)
 - Graph of courses and corresponding lessons (without the actual lesson content)
 - Lesson content
 - Lesson completion
@@ -23,7 +24,9 @@ Data required to be synced:
 
 If the sync is not successful, it's stored locally until the next opportunity.
 
-### [Offline functionality copied from Confluence](https://confluence.internal.babbel.com/wiki/display/MOB/Offline+functionality)
+### Offline functionality
+
+Copied directly from [Confluence](https://confluence.internal.babbel.com/wiki/display/MOB/Offline+functionality)
 
 #### Review Sessions
 - Review sessions are downloaded automatically (either on WiFi or cellular - depending on users settings) on the following triggers:
@@ -54,17 +57,17 @@ The upcoming lesson is downloaded automatically when a user starts the current l
 ### iOS specificities
 
 - Data is stored in JSON files
-  - no third party library used
+  - No third party library used
 - Syncing
-  - when the app starts
-  - managed by [Background App Refresh](https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/preparing_your_app_to_run_in_the_background/updating_your_app_with_background_app_refresh) (?)
+  - When the app starts
+  - Managed by [Background App Refresh](https://developer.apple.com/documentation/uikit/core_app/managing_your_app_s_life_cycle/preparing_your_app_to_run_in_the_background/updating_your_app_with_background_app_refresh) (?)
 - Auth token
   - Using the expiration time from the token, refresh token before call if expired
   - No retry for invalid token if it gets invalidated server-side before expiration
   - Some tricks about _server time_ not matching _system time_
-    - checking headers and having an "adjusted" system time (?)
-    - Most likely it is because the auth mechanism used is based on [TOTP](https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm)
-      - some implementations rely as well on the client clock being synced with the server
+    - Checking headers and having an "adjusted" system time (?)
+      - Most likely it is because the auth mechanism used is based on [TOTP](https://en.wikipedia.org/wiki/Time-based_One-time_Password_algorithm) (?)
+        - Some implementations rely, as well, on the client clock being synced with the server
 - Pre-fetching
   - Next 5 review sessions
   - When the lesson is started, download the next one
@@ -75,7 +78,49 @@ The upcoming lesson is downloaded automatically when a user starts the current l
 - Data stored in a database (?)
 - Scheduled jobs (?)
 
-### Advice for Salt from Mobile
+### Notes for Salt from Mobile
 
 - Caching is fine only _if_ you absolutely don't need the images
 - They prefer Salt to handle the syncing of data separately. It's possible to bridge the data, but it may introduce risks for them.
+
+## Offline Libraries for React Native
+
+<!-- ### redux-persist
+
+https://github.com/rt2zz/redux-persist
+
+- Requires use of [redux](https://redux.js.org/)
+-->
+
+### AsyncStorage
+
+https://facebook.github.io/react-native/docs/asyncstorage
+
+"AsyncStorage is a simple, unencrypted, asynchronous, persistent, key-value storage system that is global to the app. It should be used instead of LocalStorage."
+
+#### NetInfo
+
+https://facebook.github.io/react-native/docs/netinfo
+
+NetInfo is a built-in module that exposes information about the offline and online status. Much of the following information is taken from the documentation.
+
+Cross platform values for `ConnectionType`:
+- `none` - device is offline
+- `wifi` - device is online
+- `cellular` - device is connected via Edge, 3G, WiMax, or LTE
+- `unknown` - error case and the network status is unknown
+
+Android-only values for `ConnectionType`:
+- `bluetooth` - device is connected via Bluetooth
+- `ethernet` - device is connected via Ethernet
+- `wimax` - device is connected via WiMax
+
+### react-native-offline
+
+https://github.com/rgommezz/react-native-offline
+
+"Handy toolbelt to deal nicely with offline/online connectivity in a React Native app. Smooth redux integration ✈️"
+
+- Helps alleviate issues with NetInfo
+  - "[NetInfo] allows you to detect network connectivity, but it does not guarantee you can exchange data with a remote server even though it reports you are connected."
+
